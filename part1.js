@@ -568,15 +568,15 @@ document.addEventListener("DOMContentLoaded", () => {
       document.removeEventListener('mousemove', onMouseMove);
       target.onmouseup = null;
 
-      let gridMargin = 15;
-      let gridCenterX = 25;
-      let gridCenterY = 31;
-      let gridTop = 120;
-      let gridLeft = 130;
-      let gridX = [130, 203, 276, 349];
-      let gridY = [120, 193, 266, 359];
-      let gridXWidth = 75;
-      let gridYHeight = [73, 73, 93, 73];
+      const gridMargin = 15;
+      const gridCenterX = 25;
+      const gridCenterY = 31;
+      const gridTop = 120;
+      const gridLeft = 130;
+      const gridX = [130, 203, 276, 349];
+      const gridY = [120, 193, 266, 359];
+      const gridXWidth = 75;
+      const gridYHeight = [73, 73, 93, 73];
 
       let left = (event.pageX - shiftX);
       if (left < gridX[0]) left = gridX[0];
