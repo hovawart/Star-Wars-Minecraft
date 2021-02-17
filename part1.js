@@ -398,7 +398,8 @@ document.addEventListener("DOMContentLoaded", () => {
     var leaves = document.getElementsByClassName("leaves");
 
   function mousePos(event) {
-    console.log(event.currentTarget);
+    console.log(event.pageX);
+    console.log(event.pageY);
     // console.log("x = " + event.clientX + ", " + "y = " + event.clientY);
     // if (event.clientX > 95 && event.clientX < 115 && event.clientY > 357 && event.clientY < 516) {
     if (event.target.classList.contains("wood")) {
@@ -537,4 +538,83 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   document.addEventListener("keydown", show);
 
+  appleIn.ondragstart = function() {
+    return false;
+  };
+
+  function mousedown_handler(event) {
+    const target = event.currentTarget;
+
+    let shiftX = event.clientX - target.getBoundingClientRect().left;
+    let shiftY = event.clientY - target.getBoundingClientRect().top;
+
+    target.style.position = 'absolute';
+    target.style.zIndex = 1000;
+
+    moveAt(event.pageX, event.pageY);
+
+    function moveAt(pageX, pageY) {
+      target.style.left = pageX - shiftX + 'px';
+      target.style.top = pageY - shiftY + 'px';
+    }
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+
+    target.onmouseup = function(event) {
+      document.removeEventListener('mousemove', onMouseMove);
+      target.onmouseup = null;
+
+      let gridMargin = 15;
+      let gridCenterX = 25;
+      let gridCenterY = 31;
+      let gridTop = 120;
+      let gridLeft = 130;
+      let gridX = [130, 203, 276, 349];
+      let gridY = [120, 193, 266, 359];
+      let gridXWidth = 75;
+      let gridYHeight = [73, 73, 93, 73];
+
+      let left = (event.pageX - shiftX);
+      if (left < gridX[0]) left = gridX[0];
+      if (left + gridXWidth > gridX[gridX.length - 1] + gridXWidth) {
+        left = gridX[gridX.length - 1];
+      } 
+
+      for (let i = 0; i < gridX.length; i++) {
+        if (left + gridCenterX >= gridX[i] && left + gridCenterX <= gridX[i] + gridXWidth) {
+          left = gridX[i] + gridMargin;
+        }
+      }
+
+      let top = (event.pageY - shiftY);
+      if (top < gridY[0]) top = gridY[0];
+      if (top + gridYHeight[gridYHeight.length - 1] > gridY[gridY.length - 1] + gridYHeight[gridYHeight.length - 1]) {
+        top = gridY[gridY.length - 1];
+      }
+
+      for (let i = 0; i < gridY.length; i++) {
+        if (top + gridCenterY >= gridY[i] && top + gridCenterY <= gridY[i] + gridYHeight[i]) {
+          top = gridY[i];
+        }
+      }
+
+      target.style.left = left + 'px';
+      target.style.top = top + 'px';
+    };
+
+  };
+  const imgs = document.getElementsByTagName('img');
+  for (let i = 0; i < imgs.length; i++) {
+    imgs[i].ondragstart = function() { return false };
+  }
+
+  const elements = document.getElementsByClassName('appleIn');
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].addEventListener('mousedown', mousedown_handler);
+  }
 });
+
